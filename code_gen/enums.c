@@ -11,7 +11,6 @@ enum commands_nums
 	DIV_CMD,
 	ADD_CMD,
 	SUB_CMD,
-	MOD_CMD,
 	PUSH_REG_CMD,
 	PUSH_DIG_CMD,
 	POP_CMD,
@@ -52,7 +51,31 @@ enum commands_type
 	DIGIT,
 	REGISTER,
 	LABEL,
-	RAM
+	RAM,
+	RAM_NUM,
+	REGISTER_NUM,
+	CMP_RES
+};
+
+enum helper_enum
+{
+
+	DOUBLE_PART = 100,
+	MAX_DIGIT_LENGTH = 14
+};
+
+enum segfalt_destroer
+{
+
+	SIZE_MULTIPLY = 2,
+	CONSTANT_ADD_SIZE = 30
+};
+
+enum maximums
+{
+
+	MAX_REGS_COUNT = 256,
+	MAX_DSL_ARGS = 10
 };
 
 enum commands_size
@@ -60,7 +83,8 @@ enum commands_size
 
 	VOID_OR_COMMENT_SIZE,
 	ZERO_ARG_SIZE = 1,
-	ONE_ARG_SIZE = 9
+	ONE_ARG_REG_OR_RAM_SIZE = 2,
+	ONE_ARG_DIGIT_OR_LABEL_SIZE = 9
 };
 
 #endif //CMD_ENUM

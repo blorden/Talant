@@ -12,7 +12,7 @@ long long get_digit (const char *str)
 
 	assert(str);
 
-	return (long long)(atof(str) * 100);
+	return (long long)(atof(str) * DOUBLE_PART);
 }
 
 #endif //GET_DIGIT

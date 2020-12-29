@@ -12,8 +12,11 @@ typedef struct __file_parser
 	bool file_end;
 } file_parser;
 
+//create parser
 file_parser new_file_parser (char *buf)
 {
+
+	assert(buf);
 
 	file_parser temp;
 	temp.cur_str = buf;
@@ -42,6 +45,7 @@ file_parser new_file_parser (char *buf)
 	return temp;
 }
 
+//next string
 char* next_file_parser (file_parser *st)
 {
 
@@ -74,6 +78,7 @@ char* next_file_parser (file_parser *st)
 	return st->cur_str;
 }
 
+//cur string in parser
 char* cur_file_parser (file_parser *st)
 {
 
@@ -82,6 +87,7 @@ char* cur_file_parser (file_parser *st)
 	return st->cur_str;
 }
 
+//len cur string in parser
 size_t cur_len_file_parser (file_parser *st)
 {
 

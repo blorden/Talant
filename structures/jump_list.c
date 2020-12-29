@@ -31,6 +31,7 @@ jump_list new_jump_list ()
 	return temp;
 }
 
+//add label and info 
 void add_jump_list (jump_list *jl, 
 						const char* line, 
 						const char* label, 
@@ -58,6 +59,7 @@ void clear_jump_list (jump_list *jl)
 	jl->size = 0;
 }
 
+//check: exist label in list or not
 void check_jump_list (jump_list *jl, label_map *jm, bool *can_asm)
 {
 

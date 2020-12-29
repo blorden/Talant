@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <string.h>
 
+//equivalent strings or not
 bool strequ (const char *str1, const char *str2)
 {
 

@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <assert.h>
 
+//long or not
 bool __is_long (const char *str)
 {
 
@@ -22,14 +23,15 @@ bool __is_long (const char *str)
 			return false;
 	}
 
-	if (str[0] == '-' && len > 15)
+	if (str[0] == '-' && len > MAX_DIGIT_LENGTH + 1)
 		return false;
-	else if (len > 14 && str[0] != '-')
+	else if (len > MAX_DIGIT_LENGTH && str[0] != '-')
 		return false;
 
 	return true;	
 }
 
+//double or not
 bool __is_double (const char *str)
 {
 
@@ -63,14 +65,17 @@ bool __is_double (const char *str)
 		return false;
 	}
 
-	if (count_until_dot > 14)
+	if (count_until_dot > MAX_DIGIT_LENGTH)
 		return false;
 
 	return true;
 }
 
+//this funcs check - digit or not
 bool is_digit (const char *str)
 {
+
+	assert(str);
 
 	return __is_long(str) || __is_double(str);
 }

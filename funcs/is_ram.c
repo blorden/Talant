@@ -1,25 +1,32 @@
 #ifndef IS_RAM
 #define IS_RAM
 
+#include "is_reg.c"
+
 #include <assert.h>
 #include <stdbool.h>
 #include <string.h>
 
-bool is_ram (const char *str)
+//check ram or not
+bool is_ram (char *str)
 {
 
 	assert(str);
 
-	if (strlen(str) != 5)
+	size_t ram_str_len = strlen(str);
+
+	if (str[0] != '[' || str[ram_str_len - 1] != ']')
 		return false;
 
-	if (str[0] != '[' || str[4] != ']')
-		return false;
+	str[ram_str_len - 1] = '\0';			//] -> 0
 
-	if (str[1] != 'r' || str[3] != 'x')
-		return false;
+	bool is_reg_in_ram = is_reg(str + 1);   //[ r a x \0
+											//  ^
+											//  |
 
-	return str[2] >= 'a' && str[2] <= 'u'; 
+	str[ram_str_len - 1] = ']';				//0 -> ]
+
+	return is_reg_in_ram;
 }
 
 #endif //IS_RAM

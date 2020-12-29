@@ -4,6 +4,15 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <assert.h>
+
+enum label_map_settings
+{
+
+	LABEL_MAP_START_CAPACITY = 100,
+	LABEL_MAP_MULTY_CAPACITY = 2
+};
+
 
 typedef struct __label_map
 {
@@ -19,17 +28,20 @@ label_map new_label_map ()
 {
 
 	label_map temp;
-	temp.mem = (char**) calloc(100, sizeof(char*));
-	temp.labels = (long long*) calloc(100, sizeof(long long));
+	temp.mem = (char**) calloc(LABEL_MAP_START_CAPACITY, sizeof(char*));
+	temp.labels = (long long*) calloc(LABEL_MAP_START_CAPACITY, sizeof(long long));
 
 	temp.size = 0;
-	temp.capacity = 100;
+	temp.capacity = LABEL_MAP_START_CAPACITY;
 
 	return temp;
 }
 
+//insert label
 int insert_label_map (label_map *st, char *str, long long byte_num)
 {
+
+	assert(st && str);
 
 	for (int i = 0; i < st->size; ++i)
 	{
@@ -59,7 +71,7 @@ int insert_label_map (label_map *st, char *str, long long byte_num)
 	if (st->size == st->capacity)
 	{
 
-		st->capacity *= 2;
+		st->capacity *= LABEL_MAP_MULTY_CAPACITY;
 		st->mem = (char**) realloc(st->mem, st->capacity * sizeof(char*));
 		st->labels = (long long*) realloc(st->labels, st->capacity * sizeof(long long));
 	}
@@ -79,6 +91,8 @@ int insert_label_map (label_map *st, char *str, long long byte_num)
 bool exist_label_map (label_map *st, char *str)
 {
 
+	assert(st && str);
+
 	for (int i = 0; i < st->size; ++i)
 		if (strcmp(st->mem[i], str) == 0)
 			return true;
@@ -89,6 +103,8 @@ bool exist_label_map (label_map *st, char *str)
 long long get_num_byte_label_map (label_map *st, char *str)
 {
 
+	assert(st && str);
+
 	for (int i = 0; i < st->size; ++i)
 		if (strcmp(st->mem[i], str) == 0)
 			return st->labels[i];
@@ -98,6 +114,8 @@ long long get_num_byte_label_map (label_map *st, char *str)
 
 void clear_label_map (label_map *st)
 {
+
+	assert(st);
 
 	for (int i = 0; i < st->size; ++i)
 		free(st->mem[i]);

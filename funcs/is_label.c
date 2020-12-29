@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 
+//this func check label or not
 bool is_label (char *str)
 {
 

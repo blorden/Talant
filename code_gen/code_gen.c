@@ -1,231 +1,127 @@
-#define DOUBLE_PART 100
-
 DEF_CMD("in", IN_CMD, ZERO_ARG_SIZE, ZERO_ARG, VOID_ARG, NOT_JUMP,
 {
 
-	double input_digit = 0;
-	scanf("%lf", &input_digit);
-
-	long long stack_digit = (long long)(input_digit * DOUBLE_PART);
-	push_n_prol_stack(&exec_stack, &stack_digit, sizeof(long long));
+	IN(0)
+	PUSH(0)
 })
 
 DEF_CMD("out", OUT_CMD, ZERO_ARG_SIZE, ZERO_ARG, VOID_ARG, NOT_JUMP,
 {
 
-	long long stack_digit = *(long long*)get_prol_stack(&exec_stack, 
-   													    exec_stack.size - sizeof(long long));
-
-	long long stack_digit_mod = llabs(stack_digit) % DOUBLE_PART;
-
-	if (stack_digit / DOUBLE_PART == 0 && stack_digit < 0 && stack_digit_mod > 0)
-		printf("-");
-
-	stack_digit /= DOUBLE_PART;
-
-	printf("%lld", stack_digit);
-
-	if (stack_digit_mod > 0)
-		printf(".%lld", stack_digit_mod);
-
-	printf("\n");
-	fflush(stdout);
+	GET(0, 1)
+	OUT(0)
 })
 
 DEF_CMD("sqrt", SQRT_CMD, ZERO_ARG_SIZE, ZERO_ARG, VOID_ARG, NOT_JUMP,
 {
 
-	long long stack_digit = *(long long*)get_prol_stack(&exec_stack, 
-   													    exec_stack.size - sizeof(long long));
-
-	double digit_sqrt = sqrt(((double)stack_digit) / DOUBLE_PART);
-	stack_digit = (long long)(digit_sqrt * DOUBLE_PART);
-
-	push_n_prol_stack(&exec_stack, &stack_digit, sizeof(long long));
+	GET(0, 1)
+	SQRT(0)
+	PUSH(0)
 })
 
 DEF_CMD("mul", MUL_CMD, ZERO_ARG_SIZE, ZERO_ARG, VOID_ARG, NOT_JUMP,
 {
 
-	long long first_digit  = *(long long*)get_prol_stack(&exec_stack, 
-   									    				 exec_stack.size - sizeof(long long));
-	long long second_digit = *(long long*)get_prol_stack(&exec_stack, 
-   													     exec_stack.size - 2*sizeof(long long));
-
-	long long stack_digit = first_digit * second_digit;
-	stack_digit /= DOUBLE_PART;
-
-	push_n_prol_stack(&exec_stack, &stack_digit, sizeof(long long));
+	GET(0, 1)
+	GET(1, 2)
+	MUL(0, 1)
+	PUSH(0)
 })
 
 DEF_CMD("div", DIV_CMD, ZERO_ARG_SIZE, ZERO_ARG, VOID_ARG, NOT_JUMP,
 {
 
-	long long first_digit  = *(long long*)get_prol_stack(&exec_stack, 
-   									    				 exec_stack.size - sizeof(long long));
-	long long second_digit = *(long long*)get_prol_stack(&exec_stack, 
-   													     exec_stack.size - 2*sizeof(long long));
-
-   	double temp_double_digit = ((double)second_digit) / DOUBLE_PART;
-   	temp_double_digit /= ((double)first_digit) / DOUBLE_PART;
-
-   	long long stack_digit = temp_double_digit * DOUBLE_PART;
-
-   	push_n_prol_stack(&exec_stack, &stack_digit, sizeof(long long));
+	GET(0, 1)
+	GET(1, 2)
+	DIV(1, 0)
+	PUSH(1)
 })
 
 DEF_CMD("add", ADD_CMD, ZERO_ARG_SIZE, ZERO_ARG, VOID_ARG, NOT_JUMP,
 {
 
-	long long first_digit  = *(long long*)get_prol_stack(&exec_stack, 
-   									    				 exec_stack.size - sizeof(long long));
-	long long second_digit = *(long long*)get_prol_stack(&exec_stack, 
-   													     exec_stack.size - 2*sizeof(long long));
-
-	double temp_double_digit = ((double)second_digit) / DOUBLE_PART;
-   	temp_double_digit += ((double)first_digit) / DOUBLE_PART;
-
-   	long long stack_digit = temp_double_digit * DOUBLE_PART;
-
-   	push_n_prol_stack(&exec_stack, &stack_digit, sizeof(long long));
+	GET(0, 1)
+	GET(1, 2)
+	ADD(0, 1)
+	PUSH(0)
 })
 
 DEF_CMD("sub", SUB_CMD, ZERO_ARG_SIZE, ZERO_ARG, VOID_ARG, NOT_JUMP,
 {
 
-	long long first_digit  = *(long long*)get_prol_stack(&exec_stack, 
-   									    				 exec_stack.size - sizeof(long long));
-	long long second_digit = *(long long*)get_prol_stack(&exec_stack, 
-   													     exec_stack.size - 2*sizeof(long long));
-
-	double temp_double_digit = ((double)second_digit) / DOUBLE_PART;
-   	temp_double_digit -= ((double)first_digit) / DOUBLE_PART;
-
-   	long long stack_digit = temp_double_digit * DOUBLE_PART;
-
-   	push_n_prol_stack(&exec_stack, &stack_digit, sizeof(long long));
+	GET(0, 1)
+	GET(1, 2)
+	SUB(1, 0)
+	PUSH(1)
 })
 
-DEF_CMD("mod", MOD_CMD, ZERO_ARG_SIZE, ZERO_ARG, VOID_ARG, NOT_JUMP,
+DEF_CMD("push", PUSH_REG_CMD, ONE_ARG_REG_OR_RAM_SIZE, ONE_ARG, REGISTER, NOT_JUMP,
 {
 
-	long long first_digit  = *(long long*)get_prol_stack(&exec_stack, 
-   									    				 exec_stack.size - sizeof(long long));
-	long long second_digit = *(long long*)get_prol_stack(&exec_stack, 
-   													     exec_stack.size - 2*sizeof(long long));
-
-	double temp_double_digit = ((double)second_digit) / DOUBLE_PART;
-   	temp_double_digit = fmodl(temp_double_digit, ((double)first_digit) / DOUBLE_PART);
-
-   	long long stack_digit = temp_double_digit * DOUBLE_PART;
-
-   	push_n_prol_stack(&exec_stack, &stack_digit, sizeof(long long));
+	TAKE(0, REGISTER)
+	PUSH(0) 
 })
 
-DEF_CMD("push", PUSH_REG_CMD, ONE_ARG_SIZE, ONE_ARG, REGISTER, NOT_JUMP,
+DEF_CMD("push", PUSH_DIG_CMD, ONE_ARG_DIGIT_OR_LABEL_SIZE, ONE_ARG, DIGIT, NOT_JUMP,
 {
 
-	long long push_reg_num =  *(long long*)(buf_byte_code + cur_byte + 1);
-
-	push_n_prol_stack(&exec_stack, &regs[push_reg_num], sizeof(long long)); 
+	TAKE(0, DIGIT)
+	PUSH(0)
 })
 
-DEF_CMD("push", PUSH_DIG_CMD, ONE_ARG_SIZE, ONE_ARG, DIGIT, NOT_JUMP,
+DEF_CMD("pop", POP_CMD, ONE_ARG_REG_OR_RAM_SIZE, ONE_ARG, REGISTER, NOT_JUMP,
 {
 
-	long long push_digit  =  *(long long*)(buf_byte_code + cur_byte + 1);
-
-	push_n_prol_stack(&exec_stack, &push_digit, sizeof(long long));
+	GET(0, 1)
+	POP
+	TAKE(1, REGISTER_NUM)
+	SET(1, 0, REGISTER)
 })
 
-DEF_CMD("pop", POP_CMD, ONE_ARG_SIZE, ONE_ARG, REGISTER, NOT_JUMP,
+DEF_CMD("jmp", JMP_CMD, ONE_ARG_DIGIT_OR_LABEL_SIZE, ONE_ARG, LABEL, JUMP,
 {
 
-	long long pop_digit  = *(long long*)get_prol_stack(&exec_stack,
-													   exec_stack.size - sizeof(long long));
-
-	pop_n_prol_stack(&exec_stack, sizeof(long long));
-
-	long long reg_num    =  *(long long*)(buf_byte_code + cur_byte + 1);
-
-	regs[reg_num] = pop_digit;	
+	JMP
 })
 
-DEF_CMD("jmp", JMP_CMD, ONE_ARG_SIZE, ONE_ARG, LABEL, JUMP,
+DEF_CMD("jb", JB_CMD, ONE_ARG_DIGIT_OR_LABEL_SIZE, ONE_ARG, LABEL, JUMP,
 {
 
-	long long jump_byte =  *(long long*)(buf_byte_code + cur_byte + 1);
-
-	cur_byte = jump_byte;
+	JMPC(<)
 })
 
-DEF_CMD("jb", JB_CMD, ONE_ARG_SIZE, ONE_ARG, LABEL, JUMP,
+DEF_CMD("jbe", JBE_CMD, ONE_ARG_DIGIT_OR_LABEL_SIZE, ONE_ARG, LABEL, JUMP,
 {
 
-	long long jump_byte =  *(long long*)(buf_byte_code + cur_byte + 1);
-
-	if (cmp_res < 0)
-		cur_byte = jump_byte;
-	else
-		cur_byte += ONE_ARG_SIZE;
+	JMPC(<=)	
 })
 
-DEF_CMD("jbe", JBE_CMD, ONE_ARG_SIZE, ONE_ARG, LABEL, JUMP,
+DEF_CMD("je", JE_CMD, ONE_ARG_DIGIT_OR_LABEL_SIZE, ONE_ARG, LABEL, JUMP,
 {
 
-	long long jump_byte =  *(long long*)(buf_byte_code + cur_byte + 1);
-
-	if (cmp_res < 0 || cmp_res == 0)
-		cur_byte = jump_byte;
-	else
-		cur_byte += ONE_ARG_SIZE;	
+	JMPC(==)
 })
 
-DEF_CMD("je", JE_CMD, ONE_ARG_SIZE, ONE_ARG, LABEL, JUMP,
+DEF_CMD("jne", JNE_CMD, ONE_ARG_DIGIT_OR_LABEL_SIZE, ONE_ARG, LABEL, JUMP,
 {
 
-	long long jump_byte =  *(long long*)(buf_byte_code + cur_byte + 1);
-
-	if (cmp_res == 0)
-		cur_byte = jump_byte;
-	else
-		cur_byte += ONE_ARG_SIZE;
+	JMPC(!=)
 })
 
-DEF_CMD("jne", JNE_CMD, ONE_ARG_SIZE, ONE_ARG, LABEL, JUMP,
+DEF_CMD("ja", JA_CMD, ONE_ARG_DIGIT_OR_LABEL_SIZE, ONE_ARG, LABEL, JUMP,
 {
 
-	long long jump_byte =  *(long long*)(buf_byte_code + cur_byte + 1);
-
-	if (cmp_res != 0)
-		cur_byte = jump_byte;
-	else
-		cur_byte += ONE_ARG_SIZE;
+	JMPC(>)
 })
 
-DEF_CMD("ja", JA_CMD, ONE_ARG_SIZE, ONE_ARG, LABEL, JUMP,
+DEF_CMD("jae", JAE_CMD, ONE_ARG_DIGIT_OR_LABEL_SIZE, ONE_ARG, LABEL, JUMP,
 {
 
-	long long jump_byte = *(long long*)(buf_byte_code + cur_byte + 1);
-
-	if (cmp_res > 0)
-		cur_byte = jump_byte;
-	else
-		cur_byte += ONE_ARG_SIZE;
+	JMPC(>=)
 })
 
-DEF_CMD("jae", JAE_CMD, ONE_ARG_SIZE, ONE_ARG, LABEL, JUMP,
-{
-
-	long long jump_byte = *(long long*)(buf_byte_code + cur_byte + 1);
-
-	if (cmp_res > 0 || cmp_res == 0)
-		cur_byte = jump_byte;
-	else
-		cur_byte += ONE_ARG_SIZE;
-})
-
-DEF_CMD("jm", JM_CMD, ONE_ARG_SIZE, ONE_ARG, LABEL, JUMP,
+DEF_CMD("jm", JM_CMD, ONE_ARG_DIGIT_OR_LABEL_SIZE, ONE_ARG, LABEL, JUMP,
 {
 
 	long long jump_byte = *(long long*)(buf_byte_code + cur_byte + 1);
@@ -238,69 +134,50 @@ DEF_CMD("jm", JM_CMD, ONE_ARG_SIZE, ONE_ARG, LABEL, JUMP,
 	if (strequ(time, "Mon"))
 		cur_byte = jump_byte;
 	else
-		cur_byte += ONE_ARG_SIZE;
+		cur_byte += ONE_ARG_DIGIT_OR_LABEL_SIZE;
 })
 
-DEF_CMD("call", CALL_CMD, ONE_ARG_SIZE, ONE_ARG, LABEL, JUMP,
+DEF_CMD("call", CALL_CMD, ONE_ARG_DIGIT_OR_LABEL_SIZE, ONE_ARG, LABEL, JUMP,
 {
 
-	long long jump_byte = *(long long*)(buf_byte_code + cur_byte + 1);
-	long long ret_byte = cur_byte + ONE_ARG_SIZE;
-
-	push_prol_stack(&ret_stack, &ret_byte);
-
-	cur_byte = jump_byte;
+	PUSHR
+	JMP
 })
 
 DEF_CMD("ret", RET_CMD, ZERO_ARG_SIZE, ZERO_ARG, VOID_ARG, JUMP,
 {
 
-	long long ret_byte	 = *(long long*)get_prol_stack(&ret_stack, ret_stack.size - 1);
-
-	cur_byte = ret_byte;
-
-	pop_prol_stack(&ret_stack);
+	JMPR
+	POPR
 })
 
 DEF_CMD("hlt", HLT_CMD, ZERO_ARG_SIZE, ZERO_ARG, VOID_ARG, JUMP,
 {
 
-	cur_byte = buf_byte_code_size;
+	HLT
 })
 
 DEF_CMD("cmp", CMP_CMD, ZERO_ARG_SIZE, ZERO_ARG, VOID_ARG, NOT_JUMP,
 {
 
-	long long first_digit  = *(long long*)get_prol_stack(&exec_stack, 
-   									    				 exec_stack.size - sizeof(long long));
-	long long second_digit = *(long long*)get_prol_stack(&exec_stack, 
-   													     exec_stack.size - 2*sizeof(long long));
-
-	cmp_res = second_digit - first_digit;
+	GET(0, 1)
+	GET(1, 2)
+	SET(1, 0, CMP_RES)
 })
 
-DEF_CMD("push", PUSH_RAM_CMD, ONE_ARG_SIZE, ONE_ARG, RAM, NOT_JUMP, 
+DEF_CMD("push", PUSH_RAM_CMD, ONE_ARG_REG_OR_RAM_SIZE, ONE_ARG, RAM, NOT_JUMP, 
 {
 
-	long long ram_num = regs[*(long long*)(buf_byte_code + cur_byte + 1)];
-
-	push_n_prol_stack(&exec_stack, &ram[ram_num], sizeof(long long));
+	TAKE(0, RAM)
+	PUSH(0)
 })
 
-DEF_CMD("pop", POP_RAM_CMD, ONE_ARG_SIZE, ONE_ARG, RAM, NOT_JUMP,
+DEF_CMD("pop", POP_RAM_CMD, ONE_ARG_REG_OR_RAM_SIZE, ONE_ARG, RAM, NOT_JUMP,
 {
 
-	long long ram_num  = regs[*(long long*)(buf_byte_code + cur_byte + 1)];
-
-	if (ram_num <= ram_sz)
-	{
-
-		ram_sz = 2*ram_num + 100;
-		ram = realloc(ram, sizeof(long long) * ram_sz);
-	}
-
-	ram[ram_num] = *(long long*)get_prol_stack(&exec_stack, 
-												exec_stack.size - sizeof(long long));
-
-	pop_n_prol_stack(&exec_stack, sizeof(long long));
+	GET(0, 1)
+	POP
+	TAKE(1, RAM_NUM)
+	SET(1, 0, RAM)
 })
+	
